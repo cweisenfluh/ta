@@ -1,0 +1,31 @@
+I put this together on the airplane after thinking throuh Ari's question, for I was not happy with the answer I gave yesterday.
+
+The question as I remember it: 'how does one store and retrieve a list of hotels when given a company id and a location id?'.  I don't exactly remember the numbers 
+that were provided yesterday, so I will go with the following:
+
+   1,000,000 different locations
+     100,000 companies 
+     10 locations / company
+     10 hotels / company location
+     1k per entry
+
+So, 100,000*10*10 is 10,000,000 (10m) entries;  with 1000 bytes an entry, maybe 10G of data.  Note this should be quite sparse, maybe divide by 1,000 so we are looking at 10 meg of data.  
+
+Note that this indexing scheme goes from company -> location -> set of hotels.  Locations are really an index only for this exercise.
+
+Lets partition this a bit, maybe look at 16 different partitions.  In the example I made up partition numbers for the test, but I would expect it to really depend on things like use and size of company.  We have 100,000*10 == 1,000,000 entries (1024^2/16 == 65,536), so 16 bits would do to index a given partition for each company on the partition.
+
+A key might look like:
+  bits 0 -> 15 : company id
+  bits 16 -> 21 : partition 
+  bits 22 -> 31 : location
+ 
+this allows 6 bits for the partition (64 entries), 10 bits for location (1024 entries)
+
+Or, you can do what I did in this example and bump it up to 64, using the lower 32 for location and the upper 32 for company id.  The two uppermost bits of the company id are used for partitioning.  It is an example, after all.
+
+The implementation is pretty simple.  I have a cache interface that uses generics, the thinking being that many different types of entity objects will be stored.  This particular entity is a HotelBookingEntry.  It is specific to a given hotel, and should keep interesting goodies about hotel usage for a given company.  There is a timestamp, but there is no sorting / grouping logic - instead, an entire set is always returned.
+  
+I also have a lookup class and corresponding interface, which happens to be specific to hotels.  I would probably consider extending this class if I were to expand on it.
+
+
