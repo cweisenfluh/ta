@@ -82,7 +82,6 @@ public class HotelBookingLookup implements IHotelLookup<HotelBookingEntry> {
 	@Override
 	public Set<HotelBookingEntry> updateHotelSet(int companyId, int locationId, HotelBookingEntry hotel) {
 		
-		// just add the most recent use to the start of the list
 		// could get creative with this:  there is a count and
 		// a timestamp
 		
@@ -92,6 +91,10 @@ public class HotelBookingLookup implements IHotelLookup<HotelBookingEntry> {
 			set = new HashSet<HotelBookingEntry>();
 		}
 		
+			// not the best way to do this.
+		if (set.contains(hotel)) {
+			set.remove(hotel);
+		}
 		set.add(hotel);
 		
 		long index = getIndex(companyId, locationId);
