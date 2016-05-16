@@ -2,9 +2,8 @@ package com.ta.index;
 
 import java.util.Set;
 
-import com.ta.model.HotelBookingEntry;
-
+	// the thinking here is all things hotel that need to be looked up would go here
 public interface IHotelLookup<T> {
 	public Set<T> updateHotelSet(int companyId, int locationId, T value);
-	Set<HotelBookingEntry> getHotelSet(int companyId, int locationId);
+	Set<T> getHotelSet(int companyId, int locationId);
 }

@@ -1,9 +1,6 @@
 package com.ta.index;
 
-import java.util.List;
 import java.util.Set;
-
-import com.ta.model.HotelBookingEntry;
 
 /*
  * There may be many caches on different servers 
@@ -16,7 +13,7 @@ import com.ta.model.HotelBookingEntry;
 public interface ILookupCache<T> {
 	public void initCache();
 	public void repopulate();
-	public Set<HotelBookingEntry> retrieveValue(long index);
+	public Set<T> retrieveValue(long index);
 	public Set<Long> getAllIndexes();
-	Set<HotelBookingEntry> updateValue(long index, Set<T> value);
+	Set<T> updateValue(long index, Set<T> value);
 }
